@@ -12,16 +12,32 @@ class GameSprite():
 
     def reset(self):
         window.blit(self.image, (self.rect.x, self.rect.y))
+        
+class Player(GameSprite):
+  def update_r(self):
+    keys = key.get_pressed()
+    if keys[K_UP] and self.rect.y > 5:
+      self.rect. y -= self.speed
+    if keys[K_DOWN] and self.rect.y < win_deight - 80:
+      self.rect. y += self.speed
+  def update_l(self):
+    keys = key.get_pressed()
+    if keys[K_w] and self.rect.y > 5:
+      self.rect. y -= self.speed
+    if keys[K_s] and self.rect.y < win_deight - 80:
+      self.rect. y += self.speed
 
-
-
+speed_x = 3
+speed_y = 3
 back = (255, 255, 0)
 win_wight = 600
 win_height = 500 
 window = display.set_mode((win_height, win_wight))
 window.fill(back)
 
-ball = GameSprite(Friend.jpg, 150, 150, 10, 30, 30)
+player_1 = Player('', 130, 130, 10, 40, 60)
+player_2 = Player('', 530, 130, 10, 40, 60)
+ball = GameSprite('Friend.jpg', 150, 150, 30, 30, 30)
 
 game = True
 finish = False
@@ -32,6 +48,19 @@ while True:
     for e in event.get():
         if e.type == QUIT:
             run = False
+
+    if finish != True:
+        window.fill(back)
+        player_1.update_l()
+        player_2.update_r()
+        ball.rect.y += speed_y
+        ball.rect.x += speed_x
+
+    if sprite.collide_rect(player_1, ball) or sprite.collide_rect(player_2, ball):
+        speed_x *= -1 
+        speed_y *= 1
+    if ball.rect.y > win_height - 50 or ball.rect.y < 0:
+        speed_y *= -1
     window.blit(background, (0,0))
 
     clock.tick(FPS)
